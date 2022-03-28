@@ -18,7 +18,7 @@ This repository is a fork of [uafrica/oauth-server](https://github.com/uafrica/o
 You can install this plugin into your CakePHP application using. Run:
 
 ```bash
-composer require elstc/cakephp-oauth-server
+composer require aquaturtlium/cakephp-oauth-server
 ```
 
 ### Load plugin
