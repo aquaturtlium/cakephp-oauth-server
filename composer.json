@@ -1,15 +1,21 @@
 {
-    "name": "elstc/cakephp-oauth-server",
+    "name": "aquaturtlium/cakephp-oauth-server",
     "description": "OAuth Server for CakePHP 3 using the PHP League's OAuth2 Server",
     "type": "cakephp-plugin",
-    "keywords": ["cakephp", "oauth", "oauth2", "oauth server", "oauth2 server"],
+    "keywords": [
+        "cakephp",
+        "oauth",
+        "oauth2",
+        "oauth server",
+        "oauth2 server"
+    ],
     "require": {
         "php": ">= 7.1",
         "ext-json": "*",
         "ext-openssl": "*",
-        "cakephp/cakephp": "^3.5.18",
+        "cakephp/cakephp": "~3.5.18",
         "league/oauth2-server": "~8.0.0",
-        "cakephp/migrations": "~1.7.0"
+        "cakephp/migrations": "~1.7.0|~2.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
@@ -39,6 +45,10 @@
         {
             "name": "nojimage",
             "email": "nojimage@gmail.com"
+        },
+        {
+            "name": "K8ki",
+            "email": "blackpenguin@hotmail.co.jp"
         }
     ],
     "scripts": {
