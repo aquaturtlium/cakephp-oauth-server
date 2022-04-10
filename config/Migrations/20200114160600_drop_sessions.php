@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection AutoloadingIssuesInspection */
 
 use Migrations\AbstractMigration;
@@ -7,8 +8,8 @@ class DropSessions extends AbstractMigration
 {
     public function up()
     {
-        $this->table('oauth_session_scopes')->drop();
-        $this->table('oauth_sessions')->drop();
+        $this->table('oauth_session_scopes')->drop()->save();
+        $this->table('oauth_sessions')->drop()->save();
     }
 
     public function down()
