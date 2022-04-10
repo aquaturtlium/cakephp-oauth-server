@@ -74,7 +74,7 @@ class OAuthComponent extends Component implements UserFinderByUserCredentialsInt
             $grant = $properties['class'];
 
             if (!in_array($grant, $this->_allowedGrants)) {
-                throw new NotImplementedException(__('The {0} grant type is not supported by the OAuthServer'));
+                throw new NotImplementedException(__d('OAuthServer', 'The {0} grant type is not supported by the OAuthServer'));
             }
 
             $objGrant = $grantFactory->create($grant);
@@ -157,14 +157,14 @@ class OAuthComponent extends Component implements UserFinderByUserCredentialsInt
         $controller = $this->_registry->getController();
 
         if (!$controller->Auth) {
-            throw new InvalidArgumentException(__('OAuthComponent require AuthComponent.'));
+            throw new InvalidArgumentException(__d('OAuthServer', 'OAuthComponent require AuthComponent.'));
         }
 
         $controller->Auth->constructAuthenticate();
         $auth = $controller->Auth->getAuthenticate($this->getConfig('passwordAuthenticator'));
 
         if ($auth === null) {
-            throw new InvalidArgumentException(__('Can\'t get PasswordAuthenticator.'));
+            throw new InvalidArgumentException(__d('OAuthServer', 'Can\'t get PasswordAuthenticator.'));
         }
 
         return $auth;
@@ -179,7 +179,7 @@ class OAuthComponent extends Component implements UserFinderByUserCredentialsInt
         $userModel = $auth->getConfig('userModel');
 
         if ($userModel === null) {
-            throw new InvalidArgumentException(__('UserModel not set.'));
+            throw new InvalidArgumentException(__d('OAuthServer', 'UserModel not set.'));
         }
 
         return TableRegistry::getTableLocator()->get($userModel);

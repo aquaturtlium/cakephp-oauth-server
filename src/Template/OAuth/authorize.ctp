@@ -1,10 +1,10 @@
 <?php
 /* @var $authParams array */
 ?>
-<h1><?= h(__('{0} would like to access:', $authParams['client']->getName())) ?></h1>
+<h1><?= h(__d('OAuthServer', '{0} would like to access:', $authParams['client']->getName())) ?></h1>
 
 <ul>
-    <?php foreach ($authParams['scopes'] as $scope): ?>
+    <?php foreach ($authParams['scopes'] as $scope) : ?>
         <li>
             <?= h($scope->id) ?>: <?= h($scope->description) ?>
         </li>

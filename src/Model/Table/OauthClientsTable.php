@@ -80,7 +80,7 @@ class OauthClientsTable extends Table
 
                     return true;
                 },
-                'message' => __('the redirect_uri contains invalid uri.'),
+                'message' => __d('OAuthServer', 'the redirect_uri contains invalid uri.'),
             ]);
 
         $validator
@@ -98,7 +98,7 @@ class OauthClientsTable extends Table
 
                     return true;
                 },
-                'message' => __('the grant_types contains invalid grant type.'),
+                'message' => __d('OAuthServer', 'the grant_types contains invalid grant type.'),
             ]);
 
         return $validator;

@@ -110,7 +110,7 @@ class OAuthAuthenticate extends BaseAuthenticate
             throw new UnauthorizedException($this->_exception->getMessage(), $this->_exception->getHttpStatusCode(), $this->_exception);
         }
 
-        $message = __d('authenticate', 'You are not authenticated.');
+        $message = __d('OAuthServer', 'You are not authenticated.');
         throw new BadRequestException($message);
     }
 
