@@ -58,6 +58,25 @@ class RefreshTokensTableTest extends TestCase
         $this->assertSame(['revoked1', 'revoked2'], $results->extract('refresh_token')->toArray());
     }
 
+    public function testValidationDefault()
+    {
+        $data = [
+            'refresh_token' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZAB',
+            'revoked' => true
+        ];
+        $refreshToken = $this->RefreshTokens->newEntity($data);
+        $this->assertEmpty($refreshToken->getErrors());
+        $data = [
+            'refresh_token' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABC',
+            'revoked' => 'true'
+        ];
+        $refreshToken = $this->RefreshTokens->newEntity($data);
+        $this->assertSame([
+            'refresh_token' => ['maxLength' => 'The provided value is invalid'],
+            'revoked' => ['boolean' => 'The provided value is invalid']
+        ], $refreshToken->getErrors());
+    }
+
     public function testDropToken()
     {
         $results = $this->RefreshTokens

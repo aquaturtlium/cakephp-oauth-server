@@ -64,7 +64,7 @@ class AuthCodesTable extends Table implements RevocableTokensTableInterface
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator->maxLength('code', 40);
+        $validator->maxLength('code', 80);
         $validator->boolean('revoked');
 
         return $validator;

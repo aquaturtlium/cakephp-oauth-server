@@ -58,6 +58,25 @@ class AccessTokensTableTest extends TestCase
         $this->assertSame(['revoked1', 'revoked2'], $results->extract('oauth_token')->toArray());
     }
 
+    public function testValidationDefault()
+    {
+        $data = [
+            'oauth_token' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZAB',
+            'revoked' => true
+        ];
+        $accessToken = $this->AccessTokens->newEntity($data);
+        $this->assertEmpty($accessToken->getErrors());
+        $data = [
+            'oauth_token' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABC',
+            'revoked' => 'true'
+        ];
+        $accessToken = $this->AccessTokens->newEntity($data);
+        $this->assertSame([
+            'oauth_token' => ['maxLength' => 'The provided value is invalid'],
+            'revoked' => ['boolean' => 'The provided value is invalid']
+        ], $accessToken->getErrors());
+    }
+
     public function testDropToken()
     {
         $results = $this->AccessTokens

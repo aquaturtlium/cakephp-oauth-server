@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection AutoloadingIssuesInspection */
 
 use Migrations\AbstractMigration;
@@ -48,6 +49,11 @@ class UpgradeAuthCodesTo80 extends AbstractMigration
                 'null' => false,
             ]
         );
+        $table->changeColumn('code', 'string', [
+            'default' => null,
+            'limit' => 40,
+            'null' => false,
+        ]);
         $table->removeColumn('client_id');
         $table->removeColumn('user_id');
         $table->removeColumn('revoked');

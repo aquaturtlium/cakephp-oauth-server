@@ -50,6 +50,25 @@ class AuthCodesTableTest extends TestCase
         $this->assertSame(['revoked1', 'revoked2'], $results->extract('code')->toArray());
     }
 
+    public function testValidationDefault()
+    {
+        $data = [
+            'code' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZAB',
+            'revoked' => true
+        ];
+        $authCode = $this->AuthCodes->newEntity($data);
+        $this->assertEmpty($authCode->getErrors());
+        $data = [
+            'code' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABC',
+            'revoked' => 'true'
+        ];
+        $authCode = $this->AuthCodes->newEntity($data);
+        $this->assertSame([
+            'code' => ['maxLength' => 'The provided value is invalid'],
+            'revoked' => ['boolean' => 'The provided value is invalid']
+        ], $authCode->getErrors());
+    }
+
     public function testDropToken()
     {
         $results = $this->AuthCodes

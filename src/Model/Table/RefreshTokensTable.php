@@ -47,7 +47,7 @@ class RefreshTokensTable extends Table implements RevocableTokensTableInterface
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator->maxLength('refresh_token', 40);
+        $validator->maxLength('refresh_token', 80);
         $validator->boolean('revoked');
 
         return $validator;

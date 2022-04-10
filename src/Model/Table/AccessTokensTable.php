@@ -64,7 +64,7 @@ class AccessTokensTable extends Table implements RevocableTokensTableInterface
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator->maxLength('oauth_token', 40);
+        $validator->maxLength('oauth_token', 80);
         $validator->boolean('revoked');
 
         return $validator;
