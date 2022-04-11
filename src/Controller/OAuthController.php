@@ -122,10 +122,10 @@ class OAuthController extends AppController
             if ($e->getErrorType() === 'access_denied') {
                 $this->dispatchEvent('OAuthServer.afterDeny', [$authRequest]);
 
-                $redirectUri = $authRequest->getRedirectUri() . http_build_query([
-                        'error' => $e->getErrorType(),
-                        'message' => $e->getMessage(),
-                    ]);
+                $separator = isset(parse_url($authRequest->getRedirectUri())['query']) ? '&' : '?';
+                $state = $authRequest->getState() ? ['state' => $authRequest->getState()] : [];
+                $redirectUri = $authRequest->getRedirectUri()
+                    . $separator . http_build_query(['error' => $e->getErrorType()] + $state);
 
                 return $this->redirect($redirectUri);
             }
@@ -154,9 +154,8 @@ class OAuthController extends AppController
         try {
             return $this->OAuth->getServer()->respondToAccessTokenRequest($this->request, $this->response);
         } catch (OAuthServerException $e) {
-            // ignoring $e->getHttpHeaders() for now
-            // it only sends WWW-Authenticate header in case of InvalidClientException
-            throw new HttpException($e->getMessage(), $e->getHttpStatusCode(), $e);
+            return $e->generateHttpResponse($this->response)
+                ->withHeader('Content-Type', 'application/json');
         }
     }
 }

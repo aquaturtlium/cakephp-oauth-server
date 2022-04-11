@@ -146,13 +146,23 @@ class OAuthControllerTest extends IntegrationTestCase
     {
         $this->session(['Auth.User.id' => 'user1']);
 
-        $query = ['client_id' => 'TEST', 'redirect_uri' => 'http://www.example.com', 'response_type' => 'code', 'scope' => 'test'];
+        $query = ['client_id' => 'TEST', 'redirect_uri' => 'http://www.example.com', 'response_type' => 'code', 'scope' => 'test', 'state' => 'xzy'];
         $this->post($this->url('/oauth/authorize') . '?' . http_build_query($query), ['authorization' => 'Deny']);
 
         $this->assertRedirect();
 
         $redirectUrl = $this->_response->getHeaderLine('Location');
-        $this->assertStringStartsWith('http://www.example.comerror=access_denied&message=', $redirectUrl);
+        $this->assertStringStartsWith('http://www.example.com?error=access_denied&state=xzy', $redirectUrl);
+
+        $this->session(['Auth.User.id' => 'user2']);
+
+        $query = ['client_id' => 'RedirectQuery', 'redirect_uri' => 'http://www.example.com?query=abc', 'response_type' => 'code', 'scope' => 'test'];
+        $this->post($this->url('/oauth/authorize') . '?' . http_build_query($query), ['authorization' => 'Deny']);
+
+        $this->assertRedirect();
+
+        $redirectUrl = $this->_response->getHeaderLine('Location');
+        $this->assertStringStartsWith('http://www.example.com?query=abc&error=access_denied', $redirectUrl);
     }
 
     public function testAuthorizationCode()
@@ -185,6 +195,22 @@ class OAuthControllerTest extends IntegrationTestCase
         $this->assertSame(3600, $response['expires_in']);
         $this->assertArrayHasKey('access_token', $response);
         $this->assertArrayHasKey('refresh_token', $response);
+    }
+
+    public function testClientCredentialsAuthorizationDeny()
+    {
+        $this->post('/oauth/access_token', [
+            'grant_type' => 'client_credentials',
+            'client_id' => 'AuthCodeOnly',
+            'client_secret' => 'TestSecret',
+            'scope' => 'test',
+        ]);
+        $this->assertResponseCode(401);
+
+        $response = $this->grabResponseJson();
+        $this->assertSame('invalid_client', $response['error']);
+        $this->assertSame('Client authentication failed', $response['error_description']);
+        $this->assertSame('Client authentication failed', $response['message']);
     }
 
     public function testClientCredentialsAuthorization()

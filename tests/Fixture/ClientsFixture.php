@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Martinus.sk
  * @author Jan Sukenik
@@ -33,6 +34,19 @@ class ClientsFixture extends TestFixture
             'client_secret' => 'TestSecret',
             'name' => 'Test',
             'redirect_uri' => json_encode(['http://www.example.com']),
+            'grant_types' => json_encode([
+                'client_credentials',
+                'password',
+                'authorization_code',
+                'refresh_token',
+            ]),
+        ];
+
+        $this->records[] = [
+            'id' => 'RedirectQuery',
+            'client_secret' => 'TestSecret',
+            'name' => 'Test',
+            'redirect_uri' => json_encode(['http://www.example.com?query=abc']),
             'grant_types' => json_encode([
                 'client_credentials',
                 'password',
