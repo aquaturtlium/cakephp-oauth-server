@@ -34,6 +34,7 @@ class OAuthAuthenticate extends BaseAuthenticate
     protected $_defaultConfig = [
         'continue' => false,
         'publicKey' => null,
+        'scopes' => [],
         'fields' => [
             'username' => 'id',
         ],
@@ -129,10 +130,14 @@ class OAuthAuthenticate extends BaseAuthenticate
         }
 
         $userId = $request->getAttribute('oauth_user_id');
-
         $result = $this->_query($userId)->first();
-
         if (empty($result)) {
+            return false;
+        }
+
+        $scopes = $this->getConfig('scopes');
+        if ($scopes && !array_intersect($scopes, $request->getAttribute('oauth_scopes'))) {
+            $this->_exception = OAuthServerException::accessDenied(__d('OAuthServer', 'Access token does not have valid scope'));;
             return false;
         }
 

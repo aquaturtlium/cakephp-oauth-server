@@ -13,6 +13,7 @@ use League\OAuth2\Server\CryptKey;
 use OAuthServer\Auth\OAuthAuthenticate;
 use OAuthServer\Model\Entity\AccessToken;
 use OAuthServer\Model\Entity\Client;
+use OAuthServer\Model\Entity\Scope;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class OAuthAuthenticateTest extends TestCase
@@ -87,6 +88,30 @@ class OAuthAuthenticateTest extends TestCase
 
         $request = (new ServerRequest())->withHeader('authorization', \sprintf('Bearer %s', $token));
 
+        $this->assertNotFalse($this->auth->authenticate($request, $this->response));
+    }
+
+    public function testAuthenticateScopes()
+    {
+        $client = new Client();
+        $client->id = 'TEST';
+        $accessToken = new AccessToken();
+        $accessToken->setIdentifier('exist_token_1');
+        $accessToken->setUserIdentifier('user1');
+        $accessToken->setExpiryDateTime(FrozenTime::now()->addHour());
+        $accessToken->setClient($client);
+        $scope = new Scope();
+        $scope->id = 'test';
+        $accessToken->addScope($scope);
+        $accessToken->setPrivateKey(new CryptKey('file://' . $this->privateKeyPath));
+        $token = (string)$accessToken;
+
+        $request = (new ServerRequest())->withHeader('authorization', \sprintf('Bearer %s', $token));
+
+        $this->assertNotFalse($this->auth->authenticate($request, $this->response));
+        $this->auth->setConfig('scopes', ['test1']);
+        $this->assertFalse($this->auth->authenticate($request, $this->response));
+        $this->auth->setConfig('scopes', ['test1', 'test']);
         $this->assertNotFalse($this->auth->authenticate($request, $this->response));
     }
 
