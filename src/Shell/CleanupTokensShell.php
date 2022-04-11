@@ -12,7 +12,7 @@ use OAuthServer\Model\Table\RevocableTokensTableInterface;
 /**
  * Class CleanupTokens
  */
-class CleanupTokens extends Shell
+class CleanupTokensShell extends Shell
 {
     /**
      * @return ConsoleOptionParser
@@ -21,24 +21,24 @@ class CleanupTokens extends Shell
     {
         $parser = parent::getOptionParser();
 
-        $parser->setDescription(__('Delete expired/revoked token from database'));
+        $parser->setDescription(__d('OAuthServer', 'Delete expired/revoked token from database'));
 
         $parser->addOption('expired', [
-            'help' => __('Delete expired token.'),
+            'help' => __d('OAuthServer', 'Delete expired token.'),
             'boolean' => true,
             'default' => false,
         ]);
 
         $parser->addOption('revoked', [
-            'help' => __('Delete revoked token.'),
+            'help' => __d('OAuthServer', 'Delete revoked token.'),
             'boolean' => true,
             'default' => false,
         ]);
 
-        $parser->addSubcommand('All', ['help' => __('delete all invalid token/codes')]);
-        $parser->addSubcommand('AccessTokens', ['help' => __('delete invalid access tokens')]);
-        $parser->addSubcommand('AuthCodes', ['help' => __('delete invalid authorization codes')]);
-        $parser->addSubcommand('RefreshTokens', ['help' => __('delete invalid refresh tokens')]);
+        $parser->addSubcommand('All', ['help' => __d('OAuthServer', 'delete all invalid token/codes')]);
+        $parser->addSubcommand('AccessTokens', ['help' => __d('OAuthServer', 'delete invalid access tokens')]);
+        $parser->addSubcommand('AuthCodes', ['help' => __d('OAuthServer', 'delete invalid authorization codes')]);
+        $parser->addSubcommand('RefreshTokens', ['help' => __d('OAuthServer', 'delete invalid refresh tokens')]);
 
         return $parser;
     }
@@ -98,7 +98,7 @@ class CleanupTokens extends Shell
     private function process(RepositoryInterface $table)
     {
         if (!$table instanceof RevocableTokensTableInterface) {
-            throw new InvalidArgumentException(__('$table should implement RevocableTokensTableInterface'));
+            throw new InvalidArgumentException(__d('OAuthServer', '$table should implement RevocableTokensTableInterface'));
         }
 
         $doExpired = $this->param('expired');
